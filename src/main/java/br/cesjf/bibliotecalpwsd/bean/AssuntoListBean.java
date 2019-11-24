@@ -13,7 +13,6 @@ import java.io.Serializable;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 import org.omnifaces.cdi.ViewScoped;
 import javax.inject.Named;
 
@@ -24,7 +23,7 @@ import javax.inject.Named;
 @Named
 @ViewScoped
 public class AssuntoListBean extends ProcessReport implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private Assunto assunto;
     private List assuntos;
@@ -39,22 +38,22 @@ public class AssuntoListBean extends ProcessReport implements Serializable {
     }
 
     //Métodos dos botões 
-    public void record(ActionEvent actionEvent) {
+    public void record() {
         msgScreen(new AssuntoDAO().persistir(assunto));
         assuntos = new AssuntoDAO().buscarTodas();
     }
 
-    public void exclude(ActionEvent actionEvent) {
-        for (Object a: assuntosSelecionados){
+    public void exclude() {
+        for (Object a : assuntosSelecionados) {
             msgScreen(new AssuntoDAO().remover((Assunto) a));
         }
         assuntos = new AssuntoDAO().buscarTodas();
     }
-    
-    public void novo(ActionEvent actionEvent) {
+
+    public void novo() {
         assunto = new Assunto();
     }
-    
+
     public void buscarPorId(Integer id) {
         if (id == null) {
             throw new BusinessException("Insira um ID");
@@ -102,13 +101,13 @@ public class AssuntoListBean extends ProcessReport implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-    
+
     public void msgScreen(String msg) {
-        if(msg.contains("Não")){
+        if (msg.contains("Não")) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", msg));
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", msg));
         }
     }
-    
+
 }

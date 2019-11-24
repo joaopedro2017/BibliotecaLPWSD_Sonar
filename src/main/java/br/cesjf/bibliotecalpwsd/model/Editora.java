@@ -13,8 +13,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -27,10 +25,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "Editora")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Editora.findAll", query = "SELECT e FROM Editora e")
-    , @NamedQuery(name = "Editora.findById", query = "SELECT e FROM Editora e WHERE e.id = :id")
-    , @NamedQuery(name = "Editora.findByNome", query = "SELECT e FROM Editora e WHERE e.nome = :nome")})
 public class Editora implements Serializable, Comparable<Editora> {
 
     private static final long serialVersionUID = 1L;
@@ -91,15 +85,11 @@ public class Editora implements Serializable, Comparable<Editora> {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Editora)) {
             return false;
         }
         Editora other = (Editora) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
@@ -111,5 +101,5 @@ public class Editora implements Serializable, Comparable<Editora> {
     public int compareTo(Editora editora) {
         return this.nome.toLowerCase().compareTo(editora.getNome().toLowerCase());
     }
-    
+
 }

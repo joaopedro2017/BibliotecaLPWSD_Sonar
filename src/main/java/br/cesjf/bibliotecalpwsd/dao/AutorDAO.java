@@ -20,48 +20,42 @@ import javax.persistence.Query;
  * @author dmeireles
  */
 public class AutorDAO implements Serializable {
-    
-    public static AutorDAO autorDAO;
 
-    public static AutorDAO getInstance() {
-        if (autorDAO == null) {
-            autorDAO = new AutorDAO();
-        }
-        return autorDAO;
-    }
-    
+    public static final AutorDAO AUTOR_DAO = new AutorDAO();
+    private static final String MENSAGEM = "Não foram encontrados autores!";
+
     public Autor buscar(int id) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
             Query query = em.createQuery("SELECT a FROM Autor a WHERE a.id = :id");
             query.setParameter("id", id);
             Autor autor = (Autor) query.getSingleResult();
-            if(autor != null && autor.getId() > 0) {
+            if (autor != null && autor.getId() > 0) {
                 return autor;
             } else {
-                Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Não foram encontrados autores!");
+                Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, MENSAGEM);
                 return null;
             }
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados autores!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return null;
         }
     }
-    
-    public Autor buscar(Autor a){
+
+    public Autor buscar(Autor a) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
             Query query = em.createQuery("SELECT a FROM Autor a WHERE a.id = :id");
             query.setParameter("id", a.getId());
             Autor autor = (Autor) query.getSingleResult();
-            if(autor != null && autor.getId() > 0) {
+            if (autor != null && autor.getId() > 0) {
                 return autor;
             } else {
-                Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Não foram encontrados autores!");
+                Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, MENSAGEM);
                 return null;
             }
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados autores!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return null;
         }
     }
@@ -72,11 +66,11 @@ public class AutorDAO implements Serializable {
             Query query = em.createQuery("SELECT a FROM Autor a");
             return query.getResultList();
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados autores!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return new ArrayList<>();
         }
     }
-    
+
     public String remover(Autor autor) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
@@ -84,10 +78,10 @@ public class AutorDAO implements Serializable {
             autor = em.merge(autor);
             em.remove(autor);
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Autor removido com sucesso!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Autor removido com sucesso!");
             return "Autor " + autor.getNome() + " removido com sucesso!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível remover o autor!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return "Não foi possível remover o autor " + autor.getNome() + ", pois está vinculado a um ou mais livros";
         }
     }
@@ -98,11 +92,10 @@ public class AutorDAO implements Serializable {
             em.getTransaction().begin();
             autor = em.merge(autor);
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Autor salvo com sucesso!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Autor salvo com sucesso!");
             return "Autor " + autor.getNome() + " salvo com sucesso!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível salvar o autor!", e.getMessage());
-            if(e.getMessage().contains("ConstraintViolationException")){
+            if (e.getMessage().contains("ConstraintViolationException")) {
                 return "Não foi possível salvar o autor " + autor.getNome() + ", pois o nome deve ser único";
             }
             return "Não foi possível salvar o autor " + autor.getNome() + "!";
@@ -116,12 +109,12 @@ public class AutorDAO implements Serializable {
             Query query = em.createQuery("DELETE FROM Autor");
             query.executeUpdate();
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Todos os autores foram deletados!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Todos os autores foram deletados!");
             return "Todos os autores foram deletados!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível deletar todos os autores!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return "Não foi possível deletar todos os autores!";
         }
     }
-    
+
 }

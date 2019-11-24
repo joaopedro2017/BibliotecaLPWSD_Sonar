@@ -20,48 +20,42 @@ import javax.persistence.Query;
  * @author dmeireles
  */
 public class AssuntoDAO implements Serializable {
-    
-    public static AssuntoDAO assuntoDAO;
 
-    public static AssuntoDAO getInstance() {
-        if (assuntoDAO == null) {
-            assuntoDAO = new AssuntoDAO();
-        }
-        return assuntoDAO;
-    }
-    
+    public static final AssuntoDAO ASSUNTO_DAO = new AssuntoDAO();
+    private static final String MENSAGEM = "Não foram encontrados assuntos!";
+
     public Assunto buscar(int id) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
             Query query = em.createQuery("SELECT a FROM Assunto a WHERE a.id = :id");
             query.setParameter("id", id);
             Assunto assunto = (Assunto) query.getSingleResult();
-            if(assunto != null && assunto.getId() > 0) {
+            if (assunto != null && assunto.getId() > 0) {
                 return assunto;
             } else {
-                Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Não foram encontrados assuntos!");
+                Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, MENSAGEM);
                 return null;
             }
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados assuntos!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return null;
         }
     }
-    
-    public Assunto buscar(Assunto a){
+
+    public Assunto buscar(Assunto a) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
             Query query = em.createQuery("SELECT a FROM Assunto a WHERE a.id = :id");
             query.setParameter("id", a.getId());
             Assunto assunto = (Assunto) query.getSingleResult();
-            if(assunto != null && assunto.getId() > 0) {
+            if (assunto != null && assunto.getId() > 0) {
                 return assunto;
             } else {
-                Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Não foram encontrados assuntos!");
+                Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, MENSAGEM);
                 return null;
             }
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados assuntos!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return null;
         }
     }
@@ -72,11 +66,11 @@ public class AssuntoDAO implements Serializable {
             Query query = em.createQuery("SELECT a FROM Assunto a");
             return query.getResultList();
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados assuntos!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return new ArrayList<>();
         }
     }
-    
+
     public String remover(Assunto assunto) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
@@ -84,10 +78,10 @@ public class AssuntoDAO implements Serializable {
             assunto = em.merge(assunto);
             em.remove(assunto);
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Assunto removido com sucesso!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Assunto removido com sucesso!");
             return "Assunto " + assunto.getAssunto() + " removido com sucesso!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível remover o assunto!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return "Não foi possível remover o assunto " + assunto.getAssunto() + " , pois está vinculado a um ou mais livros";
         }
     }
@@ -98,11 +92,10 @@ public class AssuntoDAO implements Serializable {
             em.getTransaction().begin();
             assunto = em.merge(assunto);
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Assunto salvo com sucesso!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Assunto salvo com sucesso!");
             return "Assunto " + assunto.getAssunto() + " salvo com sucesso!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível salvar o assunto!", e);
-            if(e.getMessage().contains("ConstraintViolationException")){
+            if (e.getMessage().contains("ConstraintViolationException")) {
                 return "Não foi possível salvar o assunto " + assunto.getAssunto() + ", pois o assunto deve ser único";
             }
             return "Não foi possível salvar o assunto" + assunto.getAssunto() + "!";
@@ -116,12 +109,12 @@ public class AssuntoDAO implements Serializable {
             Query query = em.createQuery("DELETE FROM Assunto");
             query.executeUpdate();
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Todos os assuntos foram deletados!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Todos os assuntos foram deletados!");
             return "Todos os assuntos foram deletados!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível deletar todos os assuntos!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return "Não foi possível deletar todos os assuntos!";
         }
     }
-    
+
 }

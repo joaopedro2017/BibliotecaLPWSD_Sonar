@@ -19,14 +19,14 @@ import javax.faces.convert.FacesConverter;
  */
 @FacesConverter(forClass = Livro.class, value = "livroConverter")
 public class LivroConverter implements Converter, Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Override
     public Object getAsObject(FacesContext arg0, UIComponent arg1, String id) {
-        if (id != null && !id.isEmpty()) {
-            return (Livro) new LivroDAO().buscar(Integer.valueOf(id));
-        }
-        return id;
+        return (id != null && !id.isEmpty())
+                ? new LivroDAO().buscar(Integer.valueOf(id))
+                : id;
     }
 
     @Override

@@ -13,8 +13,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -27,14 +25,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "Usuario")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u")
-    , @NamedQuery(name = "Usuario.findById", query = "SELECT u FROM Usuario u WHERE u.id = :id")
-    , @NamedQuery(name = "Usuario.findByNome", query = "SELECT u FROM Usuario u WHERE u.nome = :nome")
-    , @NamedQuery(name = "Usuario.findByTipo", query = "SELECT u FROM Usuario u WHERE u.tipo = :tipo")
-    , @NamedQuery(name = "Usuario.findByEmail", query = "SELECT u FROM Usuario u WHERE u.email = :email")
-    , @NamedQuery(name = "Usuario.findByUsuario", query = "SELECT u FROM Usuario u WHERE u.usuario = :usuario")
-    , @NamedQuery(name = "Usuario.findBySenha", query = "SELECT u FROM Usuario u WHERE u.senha = :senha")})
 public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -97,25 +87,28 @@ public class Usuario implements Serializable {
 
     public String getTipo() {
         return tipo;
-        
+
     }
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
-    
+
     public String getTipoTexto() {
         //1 - Aluno, 2 - Professor, 3 - Funcionário, 4 - Bibliotecário e 5 - Administrador
-        if(tipo.equals("1")) {
-            return "Aluno";
-        } else if(tipo.equals("2")) {
-            return "Professor";
-        } else if(tipo.equals("3")) {
-            return "Funcionário";
-        } else if(tipo.equals("4")) {
-            return "Bibliotecário";
-        } else if(tipo.equals("5")) {
-            return "Administrador";
+        switch (tipo) {
+            case "1":
+                return "Aluno";
+            case "2":
+                return "Professor";
+            case "3":
+                return "Funcionário";
+            case "4":
+                return "Bibliotecário";
+            case "5":
+                return "Administrador";
+            default:
+                break;
         }
         return tipo;
     }
@@ -171,20 +164,16 @@ public class Usuario implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Usuario)) {
             return false;
         }
         Usuario other = (Usuario) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
         return nome;
     }
-    
+
 }

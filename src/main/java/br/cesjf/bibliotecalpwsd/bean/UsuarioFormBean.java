@@ -28,12 +28,12 @@ public class UsuarioFormBean implements Serializable {
     private static final long serialVersionUID = 1L;
     private Usuario usuario;
     private int id;
-    Map<String, String> tipos;
+    private Map<String, String> tipos;
 
     //construtor
     public UsuarioFormBean() {
         //1 - Aluno, 2 - Professor, 3 - Funcionário, 4 - Bibliotecário e 5 - Administrador
-        tipos = new HashMap<String, String>();
+        tipos = new HashMap<>();
         tipos.put("Aluno", "1");
         tipos.put("Professor", "2");
         tipos.put("Funcionário", "3");

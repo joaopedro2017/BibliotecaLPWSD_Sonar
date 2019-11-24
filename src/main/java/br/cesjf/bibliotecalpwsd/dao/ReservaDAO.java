@@ -20,48 +20,42 @@ import javax.persistence.Query;
  * @author dmeireles
  */
 public class ReservaDAO implements Serializable {
-    
-    public static ReservaDAO reservaDAO;
 
-    public static ReservaDAO getInstance() {
-        if (reservaDAO == null) {
-            reservaDAO = new ReservaDAO();
-        }
-        return reservaDAO;
-    }
-    
+    public static final ReservaDAO RESERVA_DAO = new ReservaDAO();
+    private static final String MENSAGEM = "Não foram encontradas reservas!";
+
     public Reserva buscar(int id) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
             Query query = em.createQuery("SELECT r FROM Reserva r WHERE r.id = :id");
             query.setParameter("id", id);
             Reserva reserva = (Reserva) query.getSingleResult();
-            if(reserva != null && reserva.getId() > 0) {
+            if (reserva != null && reserva.getId() > 0) {
                 return reserva;
             } else {
-                Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Não foram encontradas reservas!");
+                Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, MENSAGEM);
                 return null;
             }
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontradas reservas!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return null;
         }
     }
-    
-    public Reserva buscar(Reserva r){
+
+    public Reserva buscar(Reserva r) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
             Query query = em.createQuery("SELECT r FROM Reserva r WHERE r.id = :id");
             query.setParameter("id", r.getId());
             Reserva reserva = (Reserva) query.getSingleResult();
-            if(reserva != null && reserva.getId() > 0) {
+            if (reserva != null && reserva.getId() > 0) {
                 return reserva;
             } else {
-                Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Não foram encontradas reservas!");
+                Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, MENSAGEM);
                 return null;
             }
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontradas reservas!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return null;
         }
     }
@@ -72,11 +66,11 @@ public class ReservaDAO implements Serializable {
             Query query = em.createQuery("SELECT r FROM Reserva r");
             return query.getResultList();
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontradas reservas!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return new ArrayList<>();
         }
     }
-    
+
     public String remover(Reserva reserva) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
@@ -84,10 +78,10 @@ public class ReservaDAO implements Serializable {
             reserva = em.merge(reserva);
             em.remove(reserva);
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Reserva removida com sucesso!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Reserva removida com sucesso!");
             return "Reserva " + reserva.getId() + " removida com sucesso!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível remover a reserva " + reserva.getId() + "!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return "Não foi possível remover a reserva " + reserva.getId() + "!";
         }
     }
@@ -98,10 +92,10 @@ public class ReservaDAO implements Serializable {
             em.getTransaction().begin();
             reserva = em.merge(reserva);
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Reserva salva com sucesso!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Reserva salva com sucesso!");
             return "Reserva " + reserva.getId() + " salva com sucesso!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível salvar a reserva!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return "Não foi possível salvar a reserva " + reserva.getId() + "!";
         }
     }
@@ -113,12 +107,12 @@ public class ReservaDAO implements Serializable {
             Query query = em.createQuery("DELETE FROM Reserva");
             query.executeUpdate();
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Todas as reservas foram deletadas!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Todas as reservas foram deletadas!");
             return "Todas as reservas foram deletadas!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível deletar todas as reservas!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return "Não foi possível deletar todas as reservas!";
         }
     }
-    
+
 }

@@ -22,18 +22,14 @@ import org.omnifaces.util.Faces;
 @Named
 @ViewScoped
 public class EditoraFormBean implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private Editora editora;
     private int id;
 
-    //construtor
-    public EditoraFormBean() {
-    }
-    
     public void init() {
-        if(Faces.isAjaxRequest()){
-           return;
+        if (Faces.isAjaxRequest()) {
+            return;
         }
         if (id > 0) {
             editora = new EditoraDAO().buscar(id);
@@ -46,7 +42,7 @@ public class EditoraFormBean implements Serializable {
     public void record(ActionEvent actionEvent) {
         msgScreen(new EditoraDAO().persistir(editora));
     }
-    
+
     public void exclude(ActionEvent actionEvent) {
         msgScreen(new EditoraDAO().remover(editora));
     }
@@ -67,17 +63,17 @@ public class EditoraFormBean implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public void clear() {
         editora = new Editora();
     }
-    
+
     public boolean isNew() {
         return editora == null || editora.getId() == null || editora.getId() == 0;
     }
-    
+
     public void msgScreen(String msg) {
-        if(msg.contains("Não")){
+        if (msg.contains("Não")) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", msg));
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", msg));

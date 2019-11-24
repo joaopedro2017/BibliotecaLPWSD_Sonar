@@ -5,31 +5,31 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 template="#{layoutMB.template}">
-    
+
     <ui:define name="metadata">
-        
+
         <ui:param name="title" value="Lista de Editoras"/>
-        
+
         <style type="text/css">
-            
+
             .ui-datatable .ui-datatable-header {
                 text-align: right !important;
             }
-            
+
         </style>
-        
+
     </ui:define>
 
     <ui:define name="body">
-        
+
         <h:form>
-            
+
             <p:focus context="@form"/>
-            
+
             <div class="box box-primary">
-                
+
                 <div class="box-header with-border">
-                    
+
                     <div id="main-buttons"
                          class="hidden-sm hidden-xs">
 
@@ -53,7 +53,7 @@
                                        icon="ui-icon-danger"/>
 
                         </p:commandButton>
-                        
+
                     </div>
 
                     <p:splitButton value="Nova Editora"
@@ -95,28 +95,28 @@
 
                         <p:ajax event="rowSelectCheckbox"
                                 update="@(.ui-button, .ui-confirm-dialog)"/>
-                        
+
                         <p:ajax event="rowUnselectCheckbox"
                                 update="@(.ui-button, .ui-confirm-dialog)"/>
-                        
+
                         <p:ajax event="rowSelect"
                                 update="@(.ui-button, .ui-confirm-dialog)"/>
-                        
+
                         <p:ajax event="rowUnselect"
                                 update="@(.ui-button, .ui-confirm-dialog)"/>
 
                         <f:facet name="header">
-                            
+
                             <h:outputText value="Buscar editora por id: " />
-                            
+
                             <p:inputNumber id="inptId"
                                            decimalPlaces="0"
                                            thousandSeparator=""
                                            decimalSeparator=""
                                            value="#{editoraListBean.id}"/>
-                            
+
                             <p:spacer height="5"/>
-                            
+
                             <p:commandButton id="brBuscar"
                                              value="Buscar"
                                              action="#{editoraListBean.buscarPorId(editoraListBean.id)}"
@@ -124,25 +124,25 @@
                                              update="@form"
                                              styleClass="btn-flat bg-black btn-states"
                                              partialSubmit="true"/>
-                            
+
                         </f:facet>
-                        
+
                         <p:column selectionMode="multiple"
                                   width="5%"
                                   styleClass="align-center"
                                   exportable="false"/>
-                        
+
                         <p:column headerText="Id"
                                   sortBy="#{a.id}"
                                   filterBy="#{a.id}"
                                   width="40">
-                            
+
                             <p:link value="#{a.id}"
                                     outcome="/editora-form" >
-                                
+
                                 <f:param name="id"
                                          value="#{a.id}"/>
-                                
+
                             </p:link>
 
                         </p:column>
@@ -150,19 +150,19 @@
                         <p:column headerText="Nome"
                                   sortBy="#{a.nome}"
                                   filterBy="#{a.nome}">
-                            
+
                             <p:link value="#{a.nome}"
                                     outcome="/editora-form" >
-                                
+
                                 <f:param name="id"
                                          value="#{a.id}"/>
-                                
+
                             </p:link>
-                            
+
                         </p:column>
 
                     </p:dataTable>
-                    
+
                     <!--Exportar dados da página-->
                     <div align="center">
                         <h3>Exportar dados da página</h3>
@@ -187,28 +187,28 @@
                             <p:dataExporter type="xml" target="tabelaEditoras" fileName="editoras" />
                         </h:commandLink>
                     </div>
-                    
+
                 </div>
-                
+
             </div>
-            
+
             <p:confirmDialog global="true"
                              showEffect="fade"
                              hideEffect="fade"
                              styleClass="box-danger box-solid">
-                
+
                 <p:commandButton value="Sim"
                                  type="button"
                                  styleClass="btn-material btn-primary ui-confirmdialog-yes"
                                  icon="fa fa-check"/>
-                
+
                 <p:commandButton value="Não"
                                  type="button"
                                  styleClass="btn-material btn-danger ui-confirmdialog-no"
                                  icon="fa fa-close"/>
-                
+
             </p:confirmDialog>
-            
+
         </h:form>
 
     </ui:define>

@@ -35,7 +35,7 @@ import org.primefaces.model.UploadedFile;
 @Named
 @ViewScoped
 public class LivroFormBean implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private Livro livro;
     private List assuntos;
@@ -50,14 +50,14 @@ public class LivroFormBean implements Serializable {
         assuntos = new AssuntoDAO().buscarTodas();
         autores = new AutorDAO().buscarTodas();
         editoras = new EditoraDAO().buscarTodas();
-        
+
         ExternalContext e = FacesContext.getCurrentInstance().getExternalContext();
         diretorio = e.getRealPath("resources\\arquivos");
     }
-    
+
     public void init() {
-        if(Faces.isAjaxRequest()){
-           return;
+        if (Faces.isAjaxRequest()) {
+            return;
         }
         if (id > 0) {
             livro = new LivroDAO().buscar(id);
@@ -71,11 +71,11 @@ public class LivroFormBean implements Serializable {
         upload();
         msgScreen(new LivroDAO().persistir(livro));
     }
-    
+
     public void exclude(ActionEvent actionEvent) {
-       delete(1);
-       delete(2);
-       msgScreen(new LivroDAO().remover(livro));
+        delete(1);
+        delete(2);
+        msgScreen(new LivroDAO().remover(livro));
     }
 
     //getters and setters
@@ -121,7 +121,7 @@ public class LivroFormBean implements Serializable {
     public void setEditoras(List editoras) {
         this.editoras = editoras;
     }
-    
+
     public String getCapa() {
         return diretorio + "\\" + livro.getArquivo();
     }
@@ -134,75 +134,74 @@ public class LivroFormBean implements Serializable {
         this.uploadedFile = uploadedFile;
         upload();
     }
-    
+
     public void clear() {
         livro = new Livro();
     }
-    
+
     public boolean isNew() {
         return livro == null || livro.getId() == null || livro.getId() == 0;
     }
-    
+
     public void msgScreen(String msg) {
-        if(msg.contains("Não")){
+        if (msg.contains("Não")) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", msg));
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", msg));
         }
     }
-    
+
     public void upload() {
-        
-        if(uploadedFile != null) {
-            
+
+        if (uploadedFile != null) {
+
             File dir = new File(diretorio);
 
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-
-            try {
-                String name = new Timestamp(System.currentTimeMillis()).toString();
-                name = name.replace("-", "").replace(".", "").replace(":", "").replace(" ", "");
-                name = name + uploadedFile.getFileName();
-                File file = new File(dir, name);
-                OutputStream out = new FileOutputStream(file);
+            String name = new Timestamp(System.currentTimeMillis()).toString();
+            name = name.replace("-", "").replace(".", "").replace(":", "").replace(" ", "");
+            name = name + uploadedFile.getFileName();
+            File file = new File(dir, name);
+            try (OutputStream out = new FileOutputStream(file)) {
                 out.write(uploadedFile.getContents());
-                out.close();
-                msgScreen("O arquivo " + uploadedFile.getFileName() + " foi salvo!");
-                if(uploadedFile.getFileName().toUpperCase().contains(".PDF")){
-                    livro.setArquivo(name);
-                }else{
-                    livro.setCapa(name);
-                }
-                uploadedFile = null;
-            } catch(IOException e) {
-               msgScreen("Não foi possível salvar o arquivo " + uploadedFile.getFileName() + "!" + e);
+            } catch (IOException e) {
+                msgScreen("Não foi possível salvar o arquivo " + uploadedFile.getFileName() + "!" + e);
             }
+            msgScreen("O arquivo " + uploadedFile.getFileName() + " foi salvo!");
+            if (uploadedFile.getFileName().toUpperCase().contains(".PDF")) {
+                livro.setArquivo(name);
+            } else {
+                livro.setCapa(name);
+            }
+            uploadedFile = null;
         }
     }
-    
+
     public void delete(int i) {
-        
+        boolean deleteCapa = false;
+        boolean deletePDF = false;
         File file;
-        if(i == 1 && livro.getCapa() != null) {
+        if (i == 1 && livro.getCapa() != null) {
             file = new File(diretorio + "\\" + livro.getCapa());
-            file.delete();
-        } else if(i == 2 && livro.getArquivo() != null) {
+            deleteCapa = file.delete();
+        } else if (i == 2 && livro.getArquivo() != null) {
             file = new File(diretorio + "\\" + livro.getArquivo());
-            file.delete();
+            deletePDF = file.delete();
         }
-        
+
         msgScreen("Arquivo apagado com sucesso");
-        
-        if(i == 1) {
+
+        if (deleteCapa) {
             livro.setCapa(null);
-        } else {
+        }
+        if (deletePDF) {
             livro.setArquivo(null);
         }
-        
+
         new LivroDAO().persistir(livro);
-        
+
     }
-    
+
 }

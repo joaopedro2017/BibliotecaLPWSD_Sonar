@@ -16,8 +16,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,11 +28,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "Emprestimo")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Emprestimo.findAll", query = "SELECT e FROM Emprestimo e")
-    , @NamedQuery(name = "Emprestimo.findById", query = "SELECT e FROM Emprestimo e WHERE e.id = :id")
-    , @NamedQuery(name = "Emprestimo.findByDataEmprestimo", query = "SELECT e FROM Emprestimo e WHERE e.dataEmprestimo = :dataEmprestimo")
-    , @NamedQuery(name = "Emprestimo.findByDataDevolucao", query = "SELECT e FROM Emprestimo e WHERE e.dataDevolucao = :dataDevolucao")})
 public class Emprestimo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -65,10 +58,6 @@ public class Emprestimo implements Serializable {
     }
 
     public Emprestimo(Integer id) {
-        this.id = id;
-    }
-
-    public Emprestimo(Integer id, Date dataEmprestimo) {
         this.id = id;
     }
 
@@ -119,30 +108,39 @@ public class Emprestimo implements Serializable {
     public void setDataDevolucaoPrevista(Date dataDevolucaoPrevista) {
         this.dataDevolucaoPrevista = dataDevolucaoPrevista;
     }
-    
+
     public void calculaDevolucaoPrevista() {
         Calendar c = Calendar.getInstance();
-        if(dataEmprestimo != null){
-            
+        if (dataEmprestimo != null) {
             c.setTime(dataEmprestimo);
-            
-            if(idExemplar.getCircular() && idUsuario.getTipo().equals('C')){
-                c.add(Calendar.DAY_OF_MONTH, 10);
-            } else if(idExemplar.getCircular() && !idUsuario.getTipo().equals('C')){
-                c.add(Calendar.DAY_OF_MONTH, 15);
-            } else if(!idExemplar.getCircular()) {
+            if (idExemplar.getCircular()) {
+                tipoUsuario(c);
+            } else {
                 c.add(Calendar.DAY_OF_MONTH, 1);
             }
-            
-            if(c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
+
+            if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
                 c.add(Calendar.DAY_OF_MONTH, 2);
-            } else if(c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+            } else if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                 c.add(Calendar.DAY_OF_MONTH, 1);
             }
         } else {
             c.setTime(new Date());
         }
         dataDevolucaoPrevista = c.getTime();
+    }
+
+    private void tipoUsuario(Calendar c) {
+        int valor;
+        switch (idUsuario.getTipo()) {
+            case "C":
+                valor = 10;
+                break;
+            default:
+                valor = 15;
+                break;
+        }
+        c.add(Calendar.DAY_OF_MONTH, valor);
     }
 
     @Override
@@ -153,21 +151,18 @@ public class Emprestimo implements Serializable {
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+    public boolean equals(Object object
+    ) {
         if (!(object instanceof Emprestimo)) {
             return false;
         }
         Emprestimo other = (Emprestimo) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
-        return  Integer.toString(id);
+        return Integer.toString(id);
     }
-    
+
 }

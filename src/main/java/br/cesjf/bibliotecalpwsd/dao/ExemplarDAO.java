@@ -20,48 +20,42 @@ import javax.persistence.Query;
  * @author dmeireles
  */
 public class ExemplarDAO implements Serializable {
-    
-    public static ExemplarDAO exemplarDAO;
 
-    public static ExemplarDAO getInstance() {
-        if (exemplarDAO == null) {
-            exemplarDAO = new ExemplarDAO();
-        }
-        return exemplarDAO;
-    }
-    
+    public static final ExemplarDAO EXEMPLAR_DAO = new ExemplarDAO();
+    private static final String MENSAGEM = "Não foram encontrados exemplares!";
+
     public Exemplar buscar(int id) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
             Query query = em.createQuery("SELECT e FROM Exemplar e WHERE e.id = :id");
             query.setParameter("id", id);
             Exemplar exemplar = (Exemplar) query.getSingleResult();
-            if(exemplar != null && exemplar.getId() > 0) {
+            if (exemplar != null && exemplar.getId() > 0) {
                 return exemplar;
             } else {
-                Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Não foram encontrados exemplares!");
+                Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, MENSAGEM);
                 return null;
             }
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados exemplares!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return null;
         }
     }
-    
-    public Exemplar buscar(Exemplar ed){
+
+    public Exemplar buscar(Exemplar ed) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
             Query query = em.createQuery("SELECT e FROM Exemplar e WHERE e.id = :id");
             query.setParameter("id", ed.getId());
             Exemplar exemplar = (Exemplar) query.getSingleResult();
-            if(exemplar != null && exemplar.getId() > 0) {
+            if (exemplar != null && exemplar.getId() > 0) {
                 return exemplar;
             } else {
-                Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Não foram encontrados exemplares!");
+                Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, MENSAGEM);
                 return null;
             }
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados exemplares!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return null;
         }
     }
@@ -72,11 +66,11 @@ public class ExemplarDAO implements Serializable {
             Query query = em.createQuery("SELECT e FROM Exemplar e");
             return query.getResultList();
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados exemplares!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return new ArrayList<>();
         }
     }
-    
+
     public String remover(Exemplar exemplar) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
@@ -84,10 +78,10 @@ public class ExemplarDAO implements Serializable {
             exemplar = em.merge(exemplar);
             em.remove(exemplar);
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Exemplar removido com sucesso!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Exemplar removido com sucesso!");
             return "Exemplar " + exemplar.getId() + " removido com sucesso!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível remover o exemplar!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return "Não foi possível remover o exemplar " + exemplar.getId() + "!";
         }
     }
@@ -98,10 +92,10 @@ public class ExemplarDAO implements Serializable {
             em.getTransaction().begin();
             exemplar = em.merge(exemplar);
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Exemplar salvo com sucesso!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Exemplar salvo com sucesso!");
             return "Exemplar " + exemplar.getId() + " salvo com sucesso!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível salvar o exemplar!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return "Não foi possível salvar o exemplar " + exemplar.getId() + "!";
         }
     }
@@ -113,12 +107,12 @@ public class ExemplarDAO implements Serializable {
             Query query = em.createQuery("DELETE FROM Exemplar");
             query.executeUpdate();
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Todos os exemplares foram deletados!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Todos os exemplares foram deletados!");
             return "Todos os exemplares foram deletados!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível deletar todos os exemplares!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return "Não foi possível deletar todos os exemplares!";
         }
     }
-    
+
 }

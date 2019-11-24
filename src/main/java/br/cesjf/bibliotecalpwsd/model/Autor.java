@@ -14,8 +14,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -27,10 +25,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "Autor")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Autor.findAll", query = "SELECT a FROM Autor a")
-    , @NamedQuery(name = "Autor.findById", query = "SELECT a FROM Autor a WHERE a.id = :id")
-    , @NamedQuery(name = "Autor.findByNome", query = "SELECT a FROM Autor a WHERE a.nome = :nome")})
 public class Autor implements Serializable, Comparable<Autor> {
 
     private static final long serialVersionUID = 1L;
@@ -42,7 +36,7 @@ public class Autor implements Serializable, Comparable<Autor> {
     @Basic(optional = false)
     @Column(name = "nome")
     private String nome;
-    @ManyToMany(mappedBy="autorList")
+    @ManyToMany(mappedBy = "autorList")
     private List<Livro> livroList;
 
     public Autor() {
@@ -91,15 +85,11 @@ public class Autor implements Serializable, Comparable<Autor> {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Autor)) {
             return false;
         }
         Autor other = (Autor) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
@@ -111,5 +101,5 @@ public class Autor implements Serializable, Comparable<Autor> {
     public int compareTo(Autor autor) {
         return this.nome.toLowerCase().compareTo(autor.getNome().toLowerCase());
     }
-    
+
 }

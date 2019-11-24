@@ -25,11 +25,7 @@ public class AssuntoFormBean implements Serializable {
     
     private static final long serialVersionUID = 1L;
     private Assunto assunto;
-    private int id;
-
-    //construtor
-    public AssuntoFormBean() {
-    }
+    private int id;   
     
     public void init() {
         if(Faces.isAjaxRequest()){

@@ -19,14 +19,14 @@ import javax.faces.convert.FacesConverter;
  */
 @FacesConverter(forClass = Assunto.class, value = "assuntoConverter")
 public class AssuntoConverter implements Converter, Serializable {
+
     private static final long serialVersionUID = 1L;
 
     @Override
     public Object getAsObject(FacesContext arg0, UIComponent arg1, String id) {
-        if (id != null && !id.isEmpty()) {
-            return (Assunto) new AssuntoDAO().buscar(Integer.valueOf(id));
-        }
-        return id;
+        return (id != null && !id.isEmpty())
+                ? new AssuntoDAO().buscar(Integer.valueOf(id))
+                : id;
     }
 
     @Override

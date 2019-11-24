@@ -20,60 +20,54 @@ import javax.persistence.Query;
  * @author dmeireles
  */
 public class LivroDAO implements Serializable {
-    
-    public static LivroDAO livroDAO;
 
-    public static LivroDAO getInstance() {
-        if (livroDAO == null) {
-            livroDAO = new LivroDAO();
-        }
-        return livroDAO;
-    }
-    
+    public static final LivroDAO LIVRO_DAO = new LivroDAO();
+    private static final String MENSAGEM = "Não foram encontrados livros!";
+
     public Livro buscar(int id) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
             Query query = em.createQuery("SELECT l FROM Livro l WHERE l.id = :id");
             query.setParameter("id", id);
             Livro livro = (Livro) query.getSingleResult();
-            if(livro != null && livro.getId() > 0) {
+            if (livro != null && livro.getId() > 0) {
                 return livro;
             } else {
-                Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Não foram encontrados livros!");
+                Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, MENSAGEM);
                 return null;
             }
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados livros!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return null;
         }
     }
-    
+
     public List<Livro> buscar(String titulo) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
             Query query = em.createQuery("SELECT l FROM Livro l WHERE l.titulo LIKE :titulo");
-            query.setParameter("titulo", "%"+titulo+"%");
+            query.setParameter("titulo", "%" + titulo + "%");
             return query.getResultList();
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados livros!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return null;
         }
     }
-    
-    public Livro buscar(Livro l){
+
+    public Livro buscar(Livro l) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
             Query query = em.createQuery("SELECT l FROM Livro l WHERE l.id = :id");
             query.setParameter("id", l.getId());
             Livro livro = (Livro) query.getSingleResult();
-            if(livro != null && livro.getId() > 0) {
+            if (livro != null && livro.getId() > 0) {
                 return livro;
             } else {
-                Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Não foram encontrados livros!");
+                Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, MENSAGEM);
                 return null;
             }
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados livros!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return null;
         }
     }
@@ -84,11 +78,11 @@ public class LivroDAO implements Serializable {
             Query query = em.createQuery("SELECT l FROM Livro l");
             return query.getResultList();
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados livros!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return new ArrayList<>();
         }
     }
-    
+
     public String remover(Livro livro) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
@@ -96,10 +90,10 @@ public class LivroDAO implements Serializable {
             livro = em.merge(livro);
             em.remove(livro);
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Livro removido com sucesso!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Livro removido com sucesso!");
             return "Livro " + livro.getTitulo() + " removido com sucesso!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível remover o livro!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return "Não foi possível remover o livro " + livro.getTitulo() + ", pois está vinculado a um ou mais exemplares";
         }
     }
@@ -110,11 +104,11 @@ public class LivroDAO implements Serializable {
             em.getTransaction().begin();
             livro = em.merge(livro);
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Livro salvo com sucesso!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Livro salvo com sucesso!");
             return "Livro " + livro.getTitulo() + " salvo com sucesso!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível salvar o livro!", e.getMessage());
-            if(e.getMessage().contains("ConstraintViolationException")){
+            Logger.getLogger(e.getMessage());
+            if (e.getMessage().contains("ConstraintViolationException")) {
                 return "Não foi possível salvar o livro " + livro.getTitulo() + ", pois o título deve ser único";
             }
             return "Não foi possível salvar o livro " + livro.getTitulo() + "!";
@@ -128,12 +122,12 @@ public class LivroDAO implements Serializable {
             Query query = em.createQuery("DELETE FROM Livro");
             query.executeUpdate();
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Todos os livros foram deletados!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Todos os livros foram deletados!");
             return "Todos os livros foram deletados!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível deletar todos os livros!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return "Não foi possível deletar todos os livros!";
         }
     }
-    
+
 }

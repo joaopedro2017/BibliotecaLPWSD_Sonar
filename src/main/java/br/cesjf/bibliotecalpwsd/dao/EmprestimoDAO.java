@@ -20,48 +20,42 @@ import javax.persistence.Query;
  * @author dmeireles
  */
 public class EmprestimoDAO implements Serializable {
-    
-    public static EmprestimoDAO emprestimoDAO;
 
-    public static EmprestimoDAO getInstance() {
-        if (emprestimoDAO == null) {
-            emprestimoDAO = new EmprestimoDAO();
-        }
-        return emprestimoDAO;
-    }
-    
+    public static final EmprestimoDAO EMPRESTIMO_DAO = new EmprestimoDAO();
+    private static final String MENSAGEM = "Não foram encontrados emprestimos!";
+
     public Emprestimo buscar(int id) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
             Query query = em.createQuery("SELECT e FROM Emprestimo e WHERE e.id = :id");
             query.setParameter("id", id);
             Emprestimo emprestimo = (Emprestimo) query.getSingleResult();
-            if(emprestimo != null && emprestimo.getId() > 0) {
+            if (emprestimo != null && emprestimo.getId() > 0) {
                 return emprestimo;
             } else {
-                Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Não foram encontrados emprestimos!");
+                Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, MENSAGEM);
                 return null;
             }
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados emprestimos!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return null;
         }
     }
-    
-    public Emprestimo buscar(Emprestimo ed){
+
+    public Emprestimo buscar(Emprestimo ed) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
             Query query = em.createQuery("SELECT e FROM Emprestimo e WHERE e.id = :id");
             query.setParameter("id", ed.getId());
             Emprestimo emprestimo = (Emprestimo) query.getSingleResult();
-            if(emprestimo != null && emprestimo.getId() > 0) {
+            if (emprestimo != null && emprestimo.getId() > 0) {
                 return emprestimo;
             } else {
-                Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Não foram encontrados emprestimos!");
+                Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, MENSAGEM);
                 return null;
             }
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados emprestimos!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return null;
         }
     }
@@ -72,11 +66,11 @@ public class EmprestimoDAO implements Serializable {
             Query query = em.createQuery("SELECT e FROM Emprestimo e");
             return query.getResultList();
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foram encontrados emprestimos!", e.getMessage());
+            Logger.getLogger(e.getMessage());
             return new ArrayList<>();
         }
     }
-    
+
     public String remover(Emprestimo emprestimo) {
         try {
             EntityManager em = PersistenceUtil.getEntityManager();
@@ -84,10 +78,10 @@ public class EmprestimoDAO implements Serializable {
             emprestimo = em.merge(emprestimo);
             em.remove(emprestimo);
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Emprestimo removido com sucesso!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Emprestimo removido com sucesso!");
             return "Emprestimo " + emprestimo.getId() + " removido com sucesso!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível remover o emprestimo!", e.getMessage());
+            Logger.getLogger( e.getMessage());
             return "Não foi possível remover o emprestimo " + emprestimo.getId() + "!";
         }
     }
@@ -98,10 +92,10 @@ public class EmprestimoDAO implements Serializable {
             em.getTransaction().begin();
             emprestimo = em.merge(emprestimo);
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Emprestimo salvo com sucesso!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Emprestimo salvo com sucesso!");
             return "Emprestimo " + emprestimo.getId() + " salvo com sucesso!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível salvar o emprestimo!", e.getMessage());
+            Logger.getLogger( e.getMessage());
             return "Não foi possível salvar o emprestimo " + emprestimo.getId() + "!";
         }
     }
@@ -113,12 +107,12 @@ public class EmprestimoDAO implements Serializable {
             Query query = em.createQuery("DELETE FROM Emprestimo");
             query.executeUpdate();
             em.getTransaction().commit();
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.INFO, "Todos os emprestimos foram deletados!");
+            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Todos os emprestimos foram deletados!");
             return "Todos os emprestimos foram deletados!";
         } catch (Exception e) {
-            Logger.getLogger (PersistenceUtil.class.getName()).log(Level.WARNING, "Não foi possível deletar todos os emprestimos!", e.getMessage());
+            Logger.getLogger( e.getMessage());
             return "Não foi possível deletar todos os emprestimos!";
         }
     }
-    
+
 }

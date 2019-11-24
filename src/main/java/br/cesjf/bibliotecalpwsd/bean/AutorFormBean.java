@@ -22,18 +22,14 @@ import org.omnifaces.util.Faces;
 @Named
 @ViewScoped
 public class AutorFormBean implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private Autor autor;
     private int id;
 
-    //construtor
-    public AutorFormBean() {
-    }
-    
     public void init() {
-        if(Faces.isAjaxRequest()){
-           return;
+        if (Faces.isAjaxRequest()) {
+            return;
         }
         if (id > 0) {
             autor = new AutorDAO().buscar(id);
@@ -44,9 +40,10 @@ public class AutorFormBean implements Serializable {
 
     //Métodos dos botões 
     public void record(ActionEvent actionEvent) {
+        actionEvent.toString();
         msgScreen(new AutorDAO().persistir(autor));
     }
-    
+
     public void exclude(ActionEvent actionEvent) {
         msgScreen(new AutorDAO().remover(autor));
     }
@@ -67,17 +64,17 @@ public class AutorFormBean implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public void clear() {
         autor = new Autor();
     }
-    
+
     public boolean isNew() {
         return autor == null || autor.getId() == null || autor.getId() == 0;
     }
-    
+
     public void msgScreen(String msg) {
-        if(msg.contains("Não")){
+        if (msg.contains("Não")) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", msg));
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", msg));

@@ -17,8 +17,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -31,13 +29,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "Livro")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Livro.findAll", query = "SELECT l FROM Livro l")
-    , @NamedQuery(name = "Livro.findById", query = "SELECT l FROM Livro l WHERE l.id = :id")
-    , @NamedQuery(name = "Livro.findByTitulo", query = "SELECT l FROM Livro l WHERE l.titulo = :titulo")
-    , @NamedQuery(name = "Livro.findByIsbn", query = "SELECT l FROM Livro l WHERE l.isbn = :isbn")
-    , @NamedQuery(name = "Livro.findByEdicao", query = "SELECT l FROM Livro l WHERE l.edicao = :edicao")
-    , @NamedQuery(name = "Livro.findByAno", query = "SELECT l FROM Livro l WHERE l.ano = :ano")})
 public class Livro implements Serializable, Comparable<Livro> {
 
     private static final long serialVersionUID = 1L;
@@ -64,14 +55,14 @@ public class Livro implements Serializable, Comparable<Livro> {
     private String arquivo;
     @ManyToMany
     @JoinTable(name = "LivroAssunto",
-        joinColumns = @JoinColumn(name = "idLivro"),
-        inverseJoinColumns = @JoinColumn(name = "idAssunto")
+            joinColumns = @JoinColumn(name = "idLivro"),
+            inverseJoinColumns = @JoinColumn(name = "idAssunto")
     )
     private List<Assunto> assuntoList;
     @ManyToMany
     @JoinTable(name = "AutorLivro",
-        joinColumns = @JoinColumn(name = "idLivro"),
-        inverseJoinColumns = @JoinColumn(name = "idAutor")
+            joinColumns = @JoinColumn(name = "idLivro"),
+            inverseJoinColumns = @JoinColumn(name = "idAutor")
     )
     private List<Autor> autorList;
     @OneToMany(mappedBy = "idLivro")
@@ -150,20 +141,18 @@ public class Livro implements Serializable, Comparable<Livro> {
     public void setArquivo(String arquivo) {
         this.arquivo = arquivo;
     }
-    
-    
-    
+
     public String getAssuntos() {
         String texto = "";
-        for(Assunto a: assuntoList){
-            texto = texto + a.getAssunto() + "; ";
+        for (Assunto a : assuntoList) {
+            texto += a.getAssunto() + "; ";
         }
         return texto;
     }
-    
+
     public String getAutores() {
         String texto = "";
-        for(Autor a: autorList){
+        for (Autor a : autorList) {
             texto = texto + a.getNome() + "; ";
         }
         return texto;
@@ -203,21 +192,21 @@ public class Livro implements Serializable, Comparable<Livro> {
     public void setIdEditora(Editora idEditora) {
         this.idEditora = idEditora;
     }
-    
+
     public int getQtdeExemplarCircular() {
         int i = 0;
-        for(Exemplar e: exemplarList) {
-            if(e.getCircular()) {
+        for (Exemplar e : exemplarList) {
+            if (e.getCircular()) {
                 i++;
             }
         }
         return i;
     }
-    
+
     public int getQtdeExemplarNaoCircular() {
         int i = 0;
-        for(Exemplar e: exemplarList) {
-            if(!e.getCircular()) {
+        for (Exemplar e : exemplarList) {
+            if (!e.getCircular()) {
                 i++;
             }
         }
@@ -233,25 +222,21 @@ public class Livro implements Serializable, Comparable<Livro> {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Livro)) {
             return false;
         }
         Livro other = (Livro) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
         return titulo;
     }
-    
+
     @Override
     public int compareTo(Livro livro) {
         return this.titulo.toLowerCase().compareTo(livro.getTitulo().toLowerCase());
     }
-    
+
 }
