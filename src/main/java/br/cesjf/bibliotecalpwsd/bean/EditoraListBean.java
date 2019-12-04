@@ -27,9 +27,9 @@ public class EditoraListBean extends ProcessReport implements Serializable {
     
     private static final long serialVersionUID = 1L;
     private Editora editora;
-    private List editoras;
-    private List editorasSelecionados;
-    private List editorasFiltrados;
+    private List<Editora> editoras;
+    private List<Editora> editorasSelecionados;
+    private List<Editora> editorasFiltrados;
     private Integer id;
 
     //construtor
@@ -38,12 +38,7 @@ public class EditoraListBean extends ProcessReport implements Serializable {
         editora = new Editora();
     }
 
-    //Métodos dos botões 
-    public void record(ActionEvent actionEvent) {
-        msgScreen(new EditoraDAO().persistir(editora));
-        editoras = new EditoraDAO().buscarTodas();
-    }
-
+    //Métodos dos botões
     public void exclude(ActionEvent actionEvent) {
         for (Object a: editorasSelecionados){
             msgScreen(new EditoraDAO().remover((Editora) a));

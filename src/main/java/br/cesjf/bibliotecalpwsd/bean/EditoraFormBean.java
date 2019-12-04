@@ -21,7 +21,7 @@ import org.omnifaces.util.Faces;
  */
 @Named
 @ViewScoped
-public class EditoraFormBean implements Serializable {
+public class EditoraFormBean implements Serializable, ICrudBean {
 
     private static final long serialVersionUID = 1L;
     private Editora editora;
@@ -39,10 +39,12 @@ public class EditoraFormBean implements Serializable {
     }
 
     //Métodos dos botões 
+    @Override
     public void record(ActionEvent actionEvent) {
         msgScreen(new EditoraDAO().persistir(editora));
     }
 
+    @Override
     public void exclude(ActionEvent actionEvent) {
         msgScreen(new EditoraDAO().remover(editora));
     }

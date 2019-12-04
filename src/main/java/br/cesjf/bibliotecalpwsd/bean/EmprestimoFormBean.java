@@ -6,20 +6,11 @@
 package br.cesjf.bibliotecalpwsd.bean;
 
 import br.cesjf.bibliotecalpwsd.dao.EmprestimoDAO;
-import br.cesjf.bibliotecalpwsd.dao.ExemplarDAO;
 import br.cesjf.bibliotecalpwsd.dao.LivroDAO;
-import br.cesjf.bibliotecalpwsd.dao.ReservaDAO;
 import br.cesjf.bibliotecalpwsd.dao.UsuarioDAO;
 import br.cesjf.bibliotecalpwsd.model.Emprestimo;
-import br.cesjf.bibliotecalpwsd.model.Exemplar;
-import br.cesjf.bibliotecalpwsd.model.Livro;
-import br.cesjf.bibliotecalpwsd.model.Reserva;
-import br.cesjf.bibliotecalpwsd.model.Usuario;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -34,16 +25,10 @@ import org.primefaces.event.SelectEvent;
  */
 @Named
 @ViewScoped
-public class EmprestimoFormBean implements Serializable {
+public class EmprestimoFormBean extends CalculoDisponibilidadeBean implements Serializable, ICrudBean {
 
     private static final long serialVersionUID = 1L;
     private Emprestimo emprestimo;
-    private List<Exemplar> exemplaresPermitidos;
-    private List<Usuario> usuariosPermitidos;
-    private List<Usuario> usuarios;
-    private Livro livro;
-    private List<Livro> livros;
-    private int id;
 
     public void init() {
         if (Faces.isAjaxRequest()) {
@@ -59,11 +44,13 @@ public class EmprestimoFormBean implements Serializable {
     }
 
     //Métodos dos botões 
+    @Override
     public void record(ActionEvent actionEvent) {
         emprestimo.calculaDevolucaoPrevista();
         msgScreen(new EmprestimoDAO().persistir(emprestimo));
     }
 
+    @Override
     public void exclude(ActionEvent actionEvent) {
         msgScreen(new EmprestimoDAO().remover(emprestimo));
     }
@@ -75,55 +62,6 @@ public class EmprestimoFormBean implements Serializable {
 
     public void setEmprestimo(Emprestimo emprestimo) {
         this.emprestimo = emprestimo;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public List<Exemplar> getExemplaresPermitidos() {
-        return exemplaresPermitidos;
-    }
-
-    public void setExemplaresPermitidos(List<Exemplar> exemplaresPermitidos) {
-        this.exemplaresPermitidos = exemplaresPermitidos;
-    }
-
-    public List<Usuario> getUsuariosPermitidos() {
-        usuariosPermitidos();
-        return usuariosPermitidos;
-    }
-
-    public void setUsuariosPermitidos(List<Usuario> usuariosPermitidos) {
-        this.usuariosPermitidos = usuariosPermitidos;
-    }
-
-    public Livro getLivro() {
-        return livro;
-    }
-
-    public void setLivro(Livro livro) {
-        this.livro = livro;
-    }
-
-    public List<Livro> getLivros() {
-        return livros;
-    }
-
-    public void setLivros(List<Livro> livros) {
-        this.livros = livros;
-    }
-
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
     }
 
     public void clear() {
@@ -142,29 +80,7 @@ public class EmprestimoFormBean implements Serializable {
         }
     }
 
-    private void usuariosPermitidos() {
-        usuariosPermitidos = new ArrayList<>();
-        for (Usuario u : usuarios) {
-            List<Emprestimo> emp = new ArrayList<>();
-            for (Emprestimo e : u.getEmprestimoList()) {
-                if (e.getDataDevolucao() == null) {
-                    emp.add(e);
-                }
-            }
-            if (emprestimoAluno(u, emp) || demaisPessoas(u, emp)) {
-                usuariosPermitidos.add(u);
-            }
-        }
-    }
-
-    private static boolean demaisPessoas(Usuario u, List<Emprestimo> emp) {
-        return !u.getTipoTexto().equals("Aluno") && emp.size() < 5;
-    }
-
-    private static boolean emprestimoAluno(Usuario u, List<Emprestimo> emp) {
-        return u.getTipoTexto().equals("Aluno") && emp.size() < 3;
-    }
-
+    @Override
     public void verificaUsuario(SelectEvent event) {
         usuariosPermitidos();
         if (!usuariosPermitidos.contains(emprestimo.getIdUsuario())) {
@@ -172,63 +88,12 @@ public class EmprestimoFormBean implements Serializable {
         }
     }
 
+    @Override
     public void calcularExemplaresPermitidos(SelectEvent event) {
-        List<Exemplar> exemplares = new ExemplarDAO().buscarTodas();
-        exemplaresPermitidos = new ArrayList<>();
-        Date dataReserva = emprestimo.getDataEmprestimo();
-        if (dataReserva != null) {
-            if (livro == null) {
-                exemplaresPermitidos.addAll(exemplares);
-            } else {
-                pesquisaExemplar(exemplares);
-            }
-            List<Exemplar> lista = new ArrayList<>();
-            lista.addAll(exemplaresPermitidos);
-
-            for (Exemplar e : lista) {
-                pesquisaEmprestimo(e, dataReserva);
-                pesquisaReserva(e, dataReserva);
-            }
-        }
+        Date dataEmprestimo = emprestimo.getDataEmprestimo();
+        calcularExemplares(dataEmprestimo);
         if (emprestimo.getIdExemplar() != null) {
             exemplaresPermitidos.add(emprestimo.getIdExemplar());
         }
-    }
-
-    private void pesquisaExemplar(List<Exemplar> exemplares) {
-        for (Exemplar e : exemplares) {
-            if (Objects.equals(e.getIdLivro().getId(), livro.getId())) {
-                exemplaresPermitidos.add(e);
-            }
-        }
-    }
-
-    private void pesquisaReserva(Exemplar e, Date dataReserva) {
-        for (Reserva r : new ReservaDAO().buscarTodas()) {
-            if (Objects.equals(r.getIdExemplar().getId(), e.getId())
-                    || (!r.getCancelada()
-                    && r.getDataReserva().compareTo(dataReserva) <= 0
-                    && r.getDataDevolucaoPrevista().compareTo(dataReserva) >= 0)) {
-                exemplaresPermitidos.remove(e);
-
-            }
-        }
-    }
-
-    private void pesquisaEmprestimo(Exemplar e, Date dataReserva) {
-        for (Emprestimo emp : new EmprestimoDAO().buscarTodas()) {
-            if ((Objects.equals(emp.getIdExemplar().getId(), e.getId()))
-                    && (dataDevolucaoNula(emp, dataReserva) || dataDevolucaoNaoNula(emp, dataReserva))) {
-                exemplaresPermitidos.remove(e);
-            }
-        }
-    }
-
-    private static boolean dataDevolucaoNula(Emprestimo emp, Date dataReserva) {
-        return emp.getDataDevolucao() == null && emp.getDataEmprestimo().compareTo(dataReserva) <= 0 && emp.getDataDevolucaoPrevista().compareTo(dataReserva) >= 0;
-    }
-
-    private static boolean dataDevolucaoNaoNula(Emprestimo emp, Date dataReserva) {
-        return emp.getDataDevolucao() != null && emp.getDataEmprestimo().compareTo(dataReserva) <= 0 && emp.getDataDevolucao().compareTo(dataReserva) >= 0;
     }
 }

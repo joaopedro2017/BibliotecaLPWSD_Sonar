@@ -23,12 +23,11 @@ public class LoginDAO implements Serializable {
         query.setParameter("usuario", usuario);
         query.setParameter("senha", senha);
         List<Usuario> usuarios = query.getResultList();
-        if (usuarios.size() > 0) {
-            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Login efetuado com sucesso!");
-            return true;
-        }
-        Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Usuário ou senha inválidos!");
-        return false;
+
+        String msg = usuarios.isEmpty() ? "Login efetuado com sucesso!" : "Usuário ou senha inválidos!";
+        Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, msg);
+
+        return !usuarios.isEmpty();       
     }
 
 }

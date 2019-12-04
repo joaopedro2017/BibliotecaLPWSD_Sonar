@@ -131,15 +131,7 @@ public class Emprestimo implements Serializable {
     }
 
     private void tipoUsuario(Calendar c) {
-        int valor;
-        switch (idUsuario.getTipo()) {
-            case "C":
-                valor = 10;
-                break;
-            default:
-                valor = 15;
-                break;
-        }
+        int valor = idUsuario.getTipo().equals("C") ? 10 : 15;
         c.add(Calendar.DAY_OF_MONTH, valor);
     }
 

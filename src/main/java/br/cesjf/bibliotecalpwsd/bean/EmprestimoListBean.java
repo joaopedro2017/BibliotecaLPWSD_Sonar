@@ -25,12 +25,12 @@ import javax.inject.Named;
 @Named
 @ViewScoped
 public class EmprestimoListBean extends ProcessReport implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private Emprestimo emprestimo;
-    private List emprestimos;
-    private List emprestimosSelecionados;
-    private List emprestimosFiltrados;
+    private List<Emprestimo> emprestimos;
+    private List<Emprestimo> emprestimosSelecionados;
+    private List<Emprestimo> emprestimosFiltrados;
     private Integer id;
 
     //construtor
@@ -40,22 +40,17 @@ public class EmprestimoListBean extends ProcessReport implements Serializable {
     }
 
     //Métodos dos botões 
-    public void record(ActionEvent actionEvent) {
-        msgScreen(new EmprestimoDAO().persistir(emprestimo));
-        emprestimos = new EmprestimoDAO().buscarTodas();
-    }
-
     public void exclude(ActionEvent actionEvent) {
-        for (Object a: emprestimosSelecionados){
+        for (Object a : emprestimosSelecionados) {
             msgScreen(new EmprestimoDAO().remover((Emprestimo) a));
         }
         emprestimos = new EmprestimoDAO().buscarTodas();
     }
-    
+
     public void novo(ActionEvent actionEvent) {
         emprestimo = new Emprestimo();
     }
-    
+
     public void buscarPorId(Integer id) {
         if (id == null) {
             throw new BusinessException("Insira um ID");
@@ -103,19 +98,19 @@ public class EmprestimoListBean extends ProcessReport implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-    
+
     public void msgScreen(String msg) {
-        if(msg.contains("Não")){
+        if (msg.contains("Não")) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", msg));
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", msg));
         }
     }
-    
+
     public void efetuaDevolucao() {
         emprestimo.setDataDevolucao(new Date());
         new EmprestimoDAO().persistir(emprestimo);
         msgScreen("Devolução efetuada com sucesso!");
     }
-    
+
 }

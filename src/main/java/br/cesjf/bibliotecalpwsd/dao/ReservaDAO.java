@@ -98,21 +98,6 @@ public class ReservaDAO implements Serializable {
             Logger.getLogger(e.getMessage());
             return "Não foi possível salvar a reserva " + reserva.getId() + "!";
         }
-    }
-
-    public String removeAll() {
-        try {
-            EntityManager em = PersistenceUtil.getEntityManager();
-            em.getTransaction().begin();
-            Query query = em.createQuery("DELETE FROM Reserva");
-            query.executeUpdate();
-            em.getTransaction().commit();
-            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Todas as reservas foram deletadas!");
-            return "Todas as reservas foram deletadas!";
-        } catch (Exception e) {
-            Logger.getLogger(e.getMessage());
-            return "Não foi possível deletar todas as reservas!";
-        }
-    }
+    }   
 
 }

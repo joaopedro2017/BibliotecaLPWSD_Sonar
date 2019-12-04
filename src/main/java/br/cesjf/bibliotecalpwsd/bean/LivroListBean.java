@@ -24,12 +24,12 @@ import javax.inject.Named;
 @Named
 @ViewScoped
 public class LivroListBean extends ProcessReport implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private Livro livro;
-    private List livros;
-    private List livrosSelecionados;
-    private List livrosFiltrados;
+    private List<Livro> livros;
+    private List<Livro> livrosSelecionados;
+    private List<Livro> livrosFiltrados;
     private Integer id;
 
     //construtor
@@ -39,22 +39,17 @@ public class LivroListBean extends ProcessReport implements Serializable {
     }
 
     //Métodos dos botões 
-    public void record(ActionEvent actionEvent) {
-        msgScreen(new LivroDAO().persistir(livro));
-        livros = new LivroDAO().buscarTodas();
-    }
-
     public void exclude(ActionEvent actionEvent) {
-        for (Object a: livrosSelecionados){
+        for (Object a : livrosSelecionados) {
             msgScreen(new LivroDAO().remover((Livro) a));
         }
         livros = new LivroDAO().buscarTodas();
     }
-    
+
     public void novo(ActionEvent actionEvent) {
         livro = new Livro();
     }
-    
+
     public void buscarPorId(Integer id) {
         if (id == null) {
             throw new BusinessException("Insira um ID");
@@ -102,13 +97,13 @@ public class LivroListBean extends ProcessReport implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-    
+
     public void msgScreen(String msg) {
-        if(msg.contains("Não")){
+        if (msg.contains("Não")) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", msg));
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", msg));
         }
     }
-    
+
 }

@@ -100,21 +100,6 @@ public class AutorDAO implements Serializable {
             }
             return "Não foi possível salvar o autor " + autor.getNome() + "!";
         }
-    }
-
-    public String removeAll() {
-        try {
-            EntityManager em = PersistenceUtil.getEntityManager();
-            em.getTransaction().begin();
-            Query query = em.createQuery("DELETE FROM Autor");
-            query.executeUpdate();
-            em.getTransaction().commit();
-            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Todos os autores foram deletados!");
-            return "Todos os autores foram deletados!";
-        } catch (Exception e) {
-            Logger.getLogger(e.getMessage());
-            return "Não foi possível deletar todos os autores!";
-        }
-    }
+    }    
 
 }

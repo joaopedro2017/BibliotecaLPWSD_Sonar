@@ -115,20 +115,4 @@ public class UsuarioDAO implements Serializable {
             return "Não foi possível salvar o usuário " + usuario.getNome() + "!";
         }
     }
-
-    public String removeAll() {
-        try {
-            EntityManager em = PersistenceUtil.getEntityManager();
-            em.getTransaction().begin();
-            Query query = em.createQuery("DELETE FROM Usuario");
-            query.executeUpdate();
-            em.getTransaction().commit();
-            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Todos os usuarios foram deletados!");
-            return "Todos os usuarios foram deletados!";
-        } catch (Exception e) {
-            Logger.getLogger(e.getMessage());
-            return "Não foi possível deletar todos os usuarios!";
-        }
-    }
-
 }

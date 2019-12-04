@@ -52,7 +52,10 @@ public class DashboardBean implements Serializable {
     private BarChartModel livrosReservadosCategoria;
     private BarChartModel livrosEmprestadosCategoria;
     private BarChartModel livrosReservadosEmprestados;
-    
+    private int mes1;
+    private int mes2;
+    private int mes3;
+
     //construtor
     public DashboardBean() {
         reservas = new ReservaDAO().buscarTodas();
@@ -112,9 +115,9 @@ public class DashboardBean implements Serializable {
         data4.set(Calendar.SECOND, 0);
         data4.set(Calendar.MILLISECOND, 0);
 
-        int mes1 = 0;
-        int mes2 = 0;
-        int mes3 = 0;
+        mes1 = 0;
+        mes2 = 0;
+        mes3 = 0;
 
         for (Reserva r : reservas) {
             Calendar reserva = Calendar.getInstance();
@@ -227,9 +230,9 @@ public class DashboardBean implements Serializable {
         data4.set(Calendar.SECOND, 0);
         data4.set(Calendar.MILLISECOND, 0);
 
-        int mes1 = 0;
-        int mes2 = 0;
-        int mes3 = 0;
+        mes1 = 0;
+        mes2 = 0;
+        mes3 = 0;
 
         for (Emprestimo e : emprestimos) {
             Calendar emprestimo = Calendar.getInstance();
@@ -368,7 +371,8 @@ public class DashboardBean implements Serializable {
         int auxValue = 0;
         List<String> bgColor = new ArrayList<>();
         List<String> borderColor = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : aux.entrySet()) {
+
+        for (int i = 0; i < aux.entrySet().size(); i++) {
             auxValue++;
             if (auxValue % 2 == 0) {
                 bgColor.add(ColorUtil.COLOR_ROSA);
@@ -488,7 +492,8 @@ public class DashboardBean implements Serializable {
         int auxValue = 0;
         List<String> bgColor = new ArrayList<>();
         List<String> borderColor = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : aux.entrySet()) {
+
+        for (int i = 0; i < aux.entrySet().size(); i++) {
             auxValue++;
             if (auxValue % 2 == 0) {
                 bgColor.add(ColorUtil.COLOR_ROSA);

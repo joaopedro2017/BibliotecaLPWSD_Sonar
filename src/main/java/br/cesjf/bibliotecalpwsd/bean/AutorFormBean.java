@@ -21,7 +21,7 @@ import org.omnifaces.util.Faces;
  */
 @Named
 @ViewScoped
-public class AutorFormBean implements Serializable {
+public class AutorFormBean implements Serializable, ICrudBean {
 
     private static final long serialVersionUID = 1L;
     private Autor autor;
@@ -39,11 +39,13 @@ public class AutorFormBean implements Serializable {
     }
 
     //Métodos dos botões 
+    @Override
     public void record(ActionEvent actionEvent) {
         actionEvent.toString();
         msgScreen(new AutorDAO().persistir(autor));
     }
 
+    @Override
     public void exclude(ActionEvent actionEvent) {
         msgScreen(new AutorDAO().remover(autor));
     }

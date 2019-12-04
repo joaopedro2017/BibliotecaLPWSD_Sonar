@@ -24,7 +24,7 @@ public class RelatorioBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
-    private String relatorio;
+    private String relatorioGerencial;
     
     private Map<String, String> tipos;
     
@@ -40,12 +40,12 @@ public class RelatorioBean implements Serializable {
         range = new ArrayList<>();
     }
 
-    public String getRelatorio() {
-        return relatorio;
+    public String getRelatorioGerencial() {
+        return relatorioGerencial;
     }
 
-    public void setRelatorio(String relatorio) {
-        this.relatorio = relatorio;
+    public void setRelatorioGerencial(String relatorioGerencial) {
+        this.relatorioGerencial = relatorioGerencial;
     }
 
     public Map<String, String> getTipos() {
@@ -58,7 +58,7 @@ public class RelatorioBean implements Serializable {
     
     public void gerarRelatorio() {
         Relatorio report = new Relatorio();
-        report.getRelatorio(this.relatorio, null, null);
+        report.getRelatorio(this.relatorioGerencial, null, null);
     }
     
     public void gerarRelatorioGerencial() {

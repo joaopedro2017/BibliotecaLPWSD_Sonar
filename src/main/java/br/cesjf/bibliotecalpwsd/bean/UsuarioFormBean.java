@@ -23,7 +23,7 @@ import org.omnifaces.util.Faces;
  */
 @Named
 @ViewScoped
-public class UsuarioFormBean implements Serializable {
+public class UsuarioFormBean implements Serializable, ICrudBean {
     
     private static final long serialVersionUID = 1L;
     private Usuario usuario;
@@ -53,10 +53,12 @@ public class UsuarioFormBean implements Serializable {
     }
 
     //Métodos dos botões 
+    @Override
     public void record(ActionEvent actionEvent) {
         msgScreen(new UsuarioDAO().persistir(usuario));
     }
     
+    @Override
     public void exclude(ActionEvent actionEvent) {
         msgScreen(new UsuarioDAO().remover(usuario));
     }

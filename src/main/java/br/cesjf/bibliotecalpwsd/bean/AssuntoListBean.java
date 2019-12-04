@@ -26,9 +26,9 @@ public class AssuntoListBean extends ProcessReport implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private Assunto assunto;
-    private List assuntos;
-    private List assuntosSelecionados;
-    private List assuntosFiltrados;
+    private List<Assunto> assuntos;
+    private List<Assunto> assuntosSelecionados;
+    private List<Assunto> assuntosFiltrados;
     private Integer id;
 
     //construtor
@@ -37,12 +37,7 @@ public class AssuntoListBean extends ProcessReport implements Serializable {
         assunto = new Assunto();
     }
 
-    //Métodos dos botões 
-    public void record() {
-        msgScreen(new AssuntoDAO().persistir(assunto));
-        assuntos = new AssuntoDAO().buscarTodas();
-    }
-
+    //Métodos dos botões    
     public void exclude() {
         for (Object a : assuntosSelecionados) {
             msgScreen(new AssuntoDAO().remover((Assunto) a));

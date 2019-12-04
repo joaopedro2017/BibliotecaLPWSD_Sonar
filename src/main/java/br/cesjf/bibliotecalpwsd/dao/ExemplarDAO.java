@@ -98,21 +98,6 @@ public class ExemplarDAO implements Serializable {
             Logger.getLogger(e.getMessage());
             return "Não foi possível salvar o exemplar " + exemplar.getId() + "!";
         }
-    }
-
-    public String removeAll() {
-        try {
-            EntityManager em = PersistenceUtil.getEntityManager();
-            em.getTransaction().begin();
-            Query query = em.createQuery("DELETE FROM Exemplar");
-            query.executeUpdate();
-            em.getTransaction().commit();
-            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Todos os exemplares foram deletados!");
-            return "Todos os exemplares foram deletados!";
-        } catch (Exception e) {
-            Logger.getLogger(e.getMessage());
-            return "Não foi possível deletar todos os exemplares!";
-        }
-    }
+    }    
 
 }

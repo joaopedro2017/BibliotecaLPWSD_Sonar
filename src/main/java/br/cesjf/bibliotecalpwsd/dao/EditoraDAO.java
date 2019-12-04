@@ -101,21 +101,6 @@ public class EditoraDAO implements Serializable {
             }
             return "Não foi possível salvar a editora " + editora.getNome() + "!";
         }
-    }
-
-    public String removeAll() {
-        try {
-            EntityManager em = PersistenceUtil.getEntityManager();
-            em.getTransaction().begin();
-            Query query = em.createQuery("DELETE FROM Editora");
-            query.executeUpdate();
-            em.getTransaction().commit();
-            Logger.getLogger(PersistenceUtil.class.getName()).log(Level.INFO, "Todas as editoras foram deletadas!");
-            return "Todos os editoras foram deletados!";
-        } catch (Exception e) {
-            Logger.getLogger(e.getMessage());
-            return "Não foi possível deletar todos os editoras!";
-        }
-    }
+    }   
 
 }

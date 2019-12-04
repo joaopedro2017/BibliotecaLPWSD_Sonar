@@ -142,18 +142,18 @@ public class Livro implements Serializable, Comparable<Livro> {
         this.arquivo = arquivo;
     }
 
-    public String getAssuntos() {
-        String texto = "";
+    public StringBuilder getAssuntos() {
+        StringBuilder texto = new StringBuilder();
         for (Assunto a : assuntoList) {
-            texto += a.getAssunto() + "; ";
+            texto.append(a.getAssunto()).append("; ");
         }
         return texto;
     }
 
-    public String getAutores() {
-        String texto = "";
+    public StringBuilder getAutores() {
+        StringBuilder texto = new StringBuilder();
         for (Autor a : autorList) {
-            texto = texto + a.getNome() + "; ";
+            texto.append(a.getNome()).append("; ");
         }
         return texto;
     }

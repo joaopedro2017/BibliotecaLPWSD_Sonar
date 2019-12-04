@@ -24,12 +24,12 @@ import javax.inject.Named;
 @Named
 @ViewScoped
 public class AutorListBean extends ProcessReport implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private Autor autor;
-    private List autores;
-    private List autoresSelecionados;
-    private List autoresFiltrados;
+    private List<Autor> autores;
+    private List<Autor> autoresSelecionados;
+    private List<Autor> autoresFiltrados;
     private Integer id;
 
     //construtor
@@ -39,22 +39,17 @@ public class AutorListBean extends ProcessReport implements Serializable {
     }
 
     //Métodos dos botões 
-    public void record(ActionEvent actionEvent) {
-        msgScreen(new AutorDAO().persistir(autor));
-        autores = new AutorDAO().buscarTodas();
-    }
-
     public void exclude(ActionEvent actionEvent) {
-        for (Object a: autoresSelecionados){
+        for (Object a : autoresSelecionados) {
             msgScreen(new AutorDAO().remover((Autor) a));
         }
         autores = new AutorDAO().buscarTodas();
     }
-    
+
     public void novo(ActionEvent actionEvent) {
         autor = new Autor();
     }
-    
+
     public void buscarPorId(Integer id) {
         if (id == null) {
             throw new BusinessException("Insira um ID");
@@ -102,13 +97,13 @@ public class AutorListBean extends ProcessReport implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-    
+
     public void msgScreen(String msg) {
-        if(msg.contains("Não")){
+        if (msg.contains("Não")) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", msg));
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", msg));
         }
     }
-    
+
 }

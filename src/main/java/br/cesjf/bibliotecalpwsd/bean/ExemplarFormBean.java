@@ -7,6 +7,7 @@ package br.cesjf.bibliotecalpwsd.bean;
 
 import br.cesjf.bibliotecalpwsd.dao.ExemplarDAO;
 import br.cesjf.bibliotecalpwsd.dao.LivroDAO;
+import br.cesjf.bibliotecalpwsd.model.Livro;
 import br.cesjf.bibliotecalpwsd.model.Exemplar;
 import java.io.Serializable;
 import java.util.Collections;
@@ -24,12 +25,12 @@ import org.omnifaces.util.Faces;
  */
 @Named
 @ViewScoped
-public class ExemplarFormBean implements Serializable {
+public class ExemplarFormBean implements Serializable, ICrudBean {
     
     private static final long serialVersionUID = 1L;
     private Exemplar exemplar;
     private int id;
-    private List livros;
+    private List<Livro> livros;
 
     //construtor
     public ExemplarFormBean() {
@@ -48,10 +49,12 @@ public class ExemplarFormBean implements Serializable {
     }
 
     //Métodos dos botões 
+    @Override
     public void record(ActionEvent actionEvent) {
         msgScreen(new ExemplarDAO().persistir(exemplar));
     }
     
+    @Override
     public void exclude(ActionEvent actionEvent) {
         msgScreen(new ExemplarDAO().remover(exemplar));
     }

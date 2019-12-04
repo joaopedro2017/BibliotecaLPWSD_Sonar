@@ -1,14 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package br.cesjf.bibliotecalpwsd.bean;
 
 import br.cesjf.bibliotecalpwsd.dao.AssuntoDAO;
 import br.cesjf.bibliotecalpwsd.dao.AutorDAO;
 import br.cesjf.bibliotecalpwsd.dao.EditoraDAO;
 import br.cesjf.bibliotecalpwsd.dao.LivroDAO;
+import br.cesjf.bibliotecalpwsd.model.Assunto;
+import br.cesjf.bibliotecalpwsd.model.Autor;
 import br.cesjf.bibliotecalpwsd.model.Editora;
 import br.cesjf.bibliotecalpwsd.model.Livro;
 import java.io.File;
@@ -34,12 +31,12 @@ import org.primefaces.model.UploadedFile;
  */
 @Named
 @ViewScoped
-public class LivroFormBean implements Serializable {
+public class LivroFormBean implements Serializable, ICrudBean {
 
     private static final long serialVersionUID = 1L;
     private Livro livro;
-    private List assuntos;
-    private List autores;
+    private List<Assunto> assuntos;
+    private List<Autor> autores;
     private List<Editora> editoras;
     private int id;
     private UploadedFile uploadedFile;
@@ -52,7 +49,7 @@ public class LivroFormBean implements Serializable {
         editoras = new EditoraDAO().buscarTodas();
 
         ExternalContext e = FacesContext.getCurrentInstance().getExternalContext();
-        diretorio = e.getRealPath("resources\\arquivos");
+        diretorio = e.getRealPath("resources\\arquivos\\");
     }
 
     public void init() {
@@ -67,11 +64,13 @@ public class LivroFormBean implements Serializable {
     }
 
     //Métodos dos botões 
+    @Override
     public void record(ActionEvent actionEvent) {
         upload();
         msgScreen(new LivroDAO().persistir(livro));
     }
 
+    @Override
     public void exclude(ActionEvent actionEvent) {
         delete(1);
         delete(2);
@@ -123,7 +122,7 @@ public class LivroFormBean implements Serializable {
     }
 
     public String getCapa() {
-        return diretorio + "\\" + livro.getArquivo();
+        return diretorio  + livro.getArquivo();
     }
 
     public UploadedFile getUploadedFile() {
@@ -184,10 +183,10 @@ public class LivroFormBean implements Serializable {
         boolean deletePDF = false;
         File file;
         if (i == 1 && livro.getCapa() != null) {
-            file = new File(diretorio + "\\" + livro.getCapa());
+            file = new File(diretorio  + livro.getCapa());
             deleteCapa = file.delete();
         } else if (i == 2 && livro.getArquivo() != null) {
-            file = new File(diretorio + "\\" + livro.getArquivo());
+            file = new File(diretorio  + livro.getArquivo());
             deletePDF = file.delete();
         }
 
@@ -199,9 +198,7 @@ public class LivroFormBean implements Serializable {
         if (deletePDF) {
             livro.setArquivo(null);
         }
-
         new LivroDAO().persistir(livro);
-
     }
 
 }

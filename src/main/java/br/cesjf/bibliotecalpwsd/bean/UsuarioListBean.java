@@ -24,12 +24,12 @@ import javax.inject.Named;
 @Named
 @ViewScoped
 public class UsuarioListBean extends ProcessReport implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
     private Usuario usuario;
-    private List usuarios;
-    private List usuariosSelecionados;
-    private List usuariosFiltrados;
+    private List<Usuario> usuarios;
+    private List<Usuario> usuariosSelecionados;
+    private List<Usuario> usuariosFiltrados;
     private Integer id;
 
     //construtor
@@ -39,22 +39,17 @@ public class UsuarioListBean extends ProcessReport implements Serializable {
     }
 
     //Métodos dos botões 
-    public void record(ActionEvent actionEvent) {
-        msgScreen(new UsuarioDAO().persistir(usuario));
-        usuarios = new UsuarioDAO().buscarTodas();
-    }
-
     public void exclude(ActionEvent actionEvent) {
-        for (Object a: usuariosSelecionados){
+        for (Object a : usuariosSelecionados) {
             msgScreen(new UsuarioDAO().remover((Usuario) a));
         }
         usuarios = new UsuarioDAO().buscarTodas();
     }
-    
+
     public void novo(ActionEvent actionEvent) {
         usuario = new Usuario();
     }
-    
+
     public void buscarPorId(Integer id) {
         if (id == null) {
             throw new BusinessException("Insira um ID");
@@ -102,13 +97,13 @@ public class UsuarioListBean extends ProcessReport implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-    
+
     public void msgScreen(String msg) {
-        if(msg.contains("Não")){
+        if (msg.contains("Não")) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Aviso", msg));
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Informação", msg));
         }
     }
-    
+
 }

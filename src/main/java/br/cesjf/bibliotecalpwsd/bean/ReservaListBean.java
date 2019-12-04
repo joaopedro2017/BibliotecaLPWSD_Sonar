@@ -31,8 +31,8 @@ public class ReservaListBean extends ProcessReport implements Serializable {
     private static final long serialVersionUID = 1L;
     private Reserva reserva;
     private List<Reserva> reservas;
-    private List reservasSelecionados;
-    private List reservasFiltrados;
+    private List<Reserva> reservasSelecionados;
+    private List<Reserva> reservasFiltrados;
     private Integer id;
 
     //construtor
@@ -61,11 +61,6 @@ public class ReservaListBean extends ProcessReport implements Serializable {
     }
 
     //Métodos dos botões 
-    public void record(ActionEvent actionEvent) {
-        msgScreen(new ReservaDAO().persistir(reserva));
-        reservas = new ReservaDAO().buscarTodas();
-    }
-
     public void exclude(ActionEvent actionEvent) {
         for (Object a : reservasSelecionados) {
             msgScreen(new ReservaDAO().remover((Reserva) a));
